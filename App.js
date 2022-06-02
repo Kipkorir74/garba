@@ -1,43 +1,69 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { useState } from 'react';
+import Header from './components/header.js';
+import ToDo from './components/ToDo.js';
+import AddToDo from './components/AddToDo.js';
 
 export default function App() {
-  //use state hook
-  const [name, setName]=useState('Master Graham');
-  const [age, setAge]=useState(20);
+   const [todo,setTodo]= useState([
+     {text:'go crazy', key:'1' },
+     {text:'walk the talk', key:'2' },
+     {text:'Kill some birds', key:'3' },
+     {text:'Dawa ya Mende', key:'4' },
+   ])
 
+   const pressHandler=(key)=>{
+    setTodo((prevTodos)=>{
+      return prevTodos.filter(todo=>todo.key!=key)
+    })
+   }
+
+   const submitHandler = (text) =>{
+       setTodo((prevTodos)=>{
+        return[
+          {text:text, key:Math.random().toString()},
+          //the spread operator (...) returns all the values currently in the state
+          ...prevTodos
+        ]
+       }) 
+  }
   
   return (
     <View style={styles.container}>
-       
-        <Text>Enter your Name:</Text>
-        <TextInput style={styles.input}
-        placeholder="eg. Jonte Master"
-        onChangeText={(val) =>setName(val)}/>
+     {/* Header*/}
+     <Header/>
+     <View style={styles.content}>
+       {/*to do form */}
+       <AddToDo submitHandler = {submitHandler}/>
+       <View style={styles.list}>
+        <FlatList
+        data={todo}
+        renderItem={({item})=>(
+          <ToDo item={item} pressHandler={pressHandler}/>
+        )}
+        />
+          
+       </View>
 
-        <Text>Enter your Age:</Text>
-        <TextInput keyboardType='numeric' style={styles.input} placeholder="eg. 22" onChangeText={(val) =>setAge(val)}/>
-        <Text>My name is {name}. I am {age} years old</Text>
-
+     </View>
       <StatusBar style="auto" />
     </View>
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    
   },
-  input:{
-    borderWidth:2,
-    borderColor:"#777",
-    padding:8,
-    margin:10,
-    width:200
+  content: {
+    padding:40,
+  },
+  list:{
+    marginTop:15
   }
   
 });
