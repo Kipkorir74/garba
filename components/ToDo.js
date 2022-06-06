@@ -1,11 +1,16 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { MaterialIcons } from '@expo/vector-icons';
 
 
 export default function ToastAndroid({item, pressHandler}){
     return(
         <TouchableOpacity onPress={()=>pressHandler(item.key)}>
-            <Text style={styles.text}>{item.text}</Text>
+            <View style={styles.text}>
+                <MaterialIcons name='delete' size={18} color='#333'/>
+                <Text style={styles.itemText}>{item.text}</Text>
+            </View>
+            
         </TouchableOpacity>
     )
 
@@ -18,6 +23,10 @@ const styles = StyleSheet.create({
         borderWidth:1,
         borderStyle:'dashed',
         borderRadius:10,
-        textAlign:'center'
+        textAlign:'center',
+        flexDirection:'row'
+    },
+    itemText:{
+        marginLeft:20
     }
 })

@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useState } from 'react';
 import Header from './components/header.js';
 import ToDo from './components/ToDo.js';
 import AddToDo from './components/AddToDo.js';
+import Sandbox from './components/sandbox.js';
 
 export default function App() {
    const [todo,setTodo]= useState([
@@ -20,17 +21,31 @@ export default function App() {
    }
 
    const submitHandler = (text) =>{
-       setTodo((prevTodos)=>{
+     if (text.length > 3){
+      setTodo((prevTodos)=>{
         return[
           {text:text, key:Math.random().toString()},
           //the spread operator (...) returns all the values currently in the state
           ...prevTodos
         ]
        }) 
+     }
+     else{
+      Alert.alert('ERROR','Let your schedule be at least 4 letters long',[
+        {text:'Comprende', onPress:()=>console.log('alert closed')}
+      ])
+     }
+      
   }
   
   return (
-    <View style={styles.container}>
+    // <Sandbox/>
+    <TouchableWithoutFeedback onPress={()=>{
+      Keyboard.dismiss();
+      console.log('Keyboard dismissed');
+    }
+    }>
+      <View style={styles.container}>
      {/* Header*/}
      <Header/>
      <View style={styles.content}>
@@ -49,6 +64,8 @@ export default function App() {
      </View>
       <StatusBar style="auto" />
     </View>
+    </TouchableWithoutFeedback>
+    
   );
 }
 
@@ -61,9 +78,13 @@ const styles = StyleSheet.create({
   },
   content: {
     padding:40,
+    // backgroundColor: '#D4D5B3',
+    flex:1
   },
   list:{
-    marginTop:15
+    marginTop:15,
+    backgroundColor:'#A9AA7C',
+    flex:1
   }
   
 });
